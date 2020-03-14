@@ -29,7 +29,15 @@ namespace API
         {
             services.AddDbContext<DataContext>(opt => 
             {
-                opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+                services.AddDbContext<DataContext>(option => option.UseNpgsql(Configuration.GetConnectionString("PSQLConnection")));
+                //opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+            });
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("CorsPolicy", policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins(Configuration.GetConnectionString("ClientOrigin"));
+                });
             });
             services.AddControllers();
         }
@@ -41,6 +49,8 @@ namespace API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors("CorsPolicy");
 
             app.UseHttpsRedirection();
 
