@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Persistence.Seeds;
 
 namespace API
 {
@@ -26,6 +27,7 @@ namespace API
                 {
                     var context = services.GetRequiredService<DataContext>();
                     context.Database.Migrate();
+                    Init.SeedData(context);
                     logger.LogInformation("Files migrated");
                 }
                 catch(Exception ex) 

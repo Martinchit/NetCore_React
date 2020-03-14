@@ -7,14 +7,15 @@ namespace Persistence
 {
     public class DataContext: DbContext
     {
-
-        public DbSet<Value> Values { get; set; }
         public IConfiguration Configuration { get; }
 
         public DataContext(DbContextOptions options, IConfiguration configuration) : base(options)
         {
             Configuration = configuration;
         }
+
+        public DbSet<Value> Values { get; set; }
+        public DbSet<Activity> Activities { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
