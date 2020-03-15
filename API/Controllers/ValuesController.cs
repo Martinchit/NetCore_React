@@ -29,6 +29,10 @@ namespace API.Controllers
             try
             {
                 var values = await _dataContext.Values.ToListAsync();
+                if (values == null)
+                {
+                    return NoContent();
+                }
                 return Ok(values);
             }
             catch (Exception e)
@@ -53,6 +57,21 @@ namespace API.Controllers
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        [HttpPost]
+        public void Post([FromBody] string value)
+        {
+        }
+
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
+        {
+        }
+
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
         }
     }
 }

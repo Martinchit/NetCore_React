@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Errors;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +27,13 @@ namespace Application.Activities
             public async Task<List<Activity>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var activities = await _dataContext.Activities.ToListAsync();
+                if (activities == null)
+                {
+                    throw new RestException(
+                        HttpStatusCode.NotFound,
+                        new ErrorObject(HttpStatusCode.NotFound, "Content Not Found", "No Content")
+                    );
+                }
                 return activities;
             }
         }

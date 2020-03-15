@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Activities;
+using Application.ActivityReference;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,12 @@ namespace API
         {
             try
             {
-                return await _mediator.Send(new ListActivities.Query());
+                var activities = await _mediator.Send(new ListActivities.Query());
+                if (activities == null)
+                {
+                    return NoContent();
+                }
+                return Ok(activities);
             }
             catch (Exception e)
             {
@@ -41,7 +47,12 @@ namespace API
         {
             try
             {
-                return await _mediator.Send(new GetActivity.Query { Id = id });
+                var activity = await _mediator.Send(new GetActivity.Query { Id = id });
+                if (activity == null)
+                {
+                    return NoContent();
+                }
+                return Ok(activity);
             }
             catch (Exception e)
             {
@@ -53,15 +64,17 @@ namespace API
         [HttpPost]
         public async Task<ActionResult<Unit>> Create([FromBody] CreateActivity.Command command)
         {
-            try
-            {
-                return await _mediator.Send(command);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                return BadRequest(e.Message);
-            }
+            return await _mediator.Send(command);
+            //_logger.LogInformation("Hereee");
+            //try
+            //{
+            //    return await _mediator.Send(command);
+            //}
+            //catch (Exception e)
+            //{
+            //    _logger.LogError(e.Message);
+            //    return BadRequest(e.Message);
+            //}
         }
 
         //[HttpPost]
@@ -89,30 +102,32 @@ namespace API
         [HttpPut("{id}")]
         public async Task<ActionResult<Unit>> Edit(Guid id, [FromBody] EditActivity.Command command)
         {
-            try
-            {
-                command.Id = id;
-                return await _mediator.Send(command);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                return BadRequest(e.Message);
-            }
+            return await _mediator.Send(command);
+            //try
+            //{
+            //    command.Id = id;
+            //    return await _mediator.Send(command);
+            //}
+            //catch (Exception e)
+            //{
+            //    _logger.LogError(e.Message);
+            //    return BadRequest(e.Message);
+            //}
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(Guid id)
         {
-            try
-            {
-                return await _mediator.Send(new DeleteActivity.Command { Id = id });
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                return BadRequest(e.Message);
-            }
+            return await _mediator.Send(new DeleteActivity.Command { Id = id });
+            //try
+            //{
+            //    return await _mediator.Send(new DeleteActivity.Command { Id = id });
+            //}
+            //catch (Exception e)
+            //{
+            //    _logger.LogError(e.Message);
+            //    return BadRequest(e.Message);
+            //}
         }
     }
 }

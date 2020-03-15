@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Persistence;
+using Application.Errors;
 
 namespace Application.Activities
 {
@@ -29,7 +31,7 @@ namespace Application.Activities
 
                 if (activity == null)
                 {
-                    throw new Exception("Could not found activity");
+                    throw new RestException(HttpStatusCode.NotFound, new ErrorObject(HttpStatusCode.NotFound, "Invalid Activity ID", "Failed to delete as activity not found"));
                 }
 
                 _dataContext.Remove(activity);

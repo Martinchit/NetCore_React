@@ -1,6 +1,8 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.ActivityReference;
+using FluentValidation;
 using MediatR;
 using Persistence;
 
@@ -13,10 +15,23 @@ namespace Application.Activities
             public Guid Id { get; set; }
             public string Title { get; set; }
             public string Description { get; set; }
-            public string Category { get; set; }
+            public ActivityType? Category { get; set; }
             public DateTime? Date { get; set; }
             public string City { get; set; }
             public string Venue { get; set; }
+        }
+
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(x => x.Title).NotEmpty().NotNull();
+                RuleFor(x => x.Description).NotEmpty().NotNull().MaximumLength(60).MinimumLength(5);
+                RuleFor(x => x.Category).NotEmpty().NotNull().WithMessage("Category cannot be null or empty.").IsInEnum().WithMessage("Category value is invalid.");
+                RuleFor(x => x.Date).NotEmpty();
+                RuleFor(x => x.City).NotEmpty().NotNull();
+                RuleFor(x => x.Venue).NotEmpty().NotNull();
+            }
         }
 
         public class Handler : IRequestHandler<Command>
@@ -37,10 +52,12 @@ namespace Application.Activities
                 {
                     throw new Exception("Could not found activity");
                 }
-
+                Console.WriteLine(request.Category);
+                Console.WriteLine(request.Category.ToString());
+                Console.WriteLine((ActivityType)Enum.Parse(typeof(ActivityType), activity.Category.ToString()));
                 activity.Title = request.Title ?? activity.Title;
                 activity.Description = request.Description ?? activity.Description;
-                activity.Category = request.Category ?? activity.Category;
+                activity.Category = request.Category.ToString() ?? activity.Category;
                 activity.Date = request.Date ?? activity.Date;
                 activity.City = request.City ?? activity.City;
                 activity.Venue = request.Venue ?? activity.Venue;
