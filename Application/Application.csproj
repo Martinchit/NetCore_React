@@ -14,11 +14,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Activities\" />
-    <Folder Include="Reference\" />
+    <Folder Include="ResponseObject\" />
     <Folder Include="Errors\" />
+    <Folder Include="Users\" />
+    <Folder Include="Interface\" />
+    <Folder Include="Validators\" />
   </ItemGroup>
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
 </Project>

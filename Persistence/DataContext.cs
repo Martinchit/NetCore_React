@@ -1,11 +1,12 @@
 ﻿using System;
 using Domain;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace Persistence
 {
-    public class DataContext: DbContext
+    public class DataContext: IdentityDbContext<AppUser>
     {
         public IConfiguration Configuration { get; }
 
@@ -24,6 +25,8 @@ namespace Persistence
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            base.OnModelCreating(builder);
+
             builder.Entity<Value>()
                 .HasData(
                     new Value { Id = 1, Name = "Value 101" },

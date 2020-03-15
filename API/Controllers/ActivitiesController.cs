@@ -1,34 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using API.Controllers;
 using Application.Activities;
-using Application.ActivityReference;
 using Domain;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace API
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ActivitiesController : ControllerBase
+    public class ActivitiesController : BaseController
     {
-        private readonly IMediator _mediator;
-        private readonly ILogger<ActivitiesController> _logger;
-
-        public ActivitiesController(ILogger<ActivitiesController> logger, IMediator mediator)
-        {
-            _mediator = mediator;
-            _logger = logger;
-        }
 
         [HttpGet]
         public async Task<ActionResult<List<Activity>>> List()
         {
             try
             {
-                var activities = await _mediator.Send(new ListActivities.Query());
+                var activities = await Mediator.Send(new ListActivities.Query());
                 if (activities == null)
                 {
                     return NoContent();
@@ -37,7 +28,7 @@ namespace API
             }
             catch (Exception e)
             {
-                _logger.LogError(e.Message);
+                Logger.LogError(e.Message);
                 return BadRequest(e.Message);
             }
         }
@@ -47,7 +38,7 @@ namespace API
         {
             try
             {
-                var activity = await _mediator.Send(new GetActivity.Query { Id = id });
+                var activity = await Mediator.Send(new GetActivity.Query { Id = id });
                 if (activity == null)
                 {
                     return NoContent();
@@ -56,7 +47,7 @@ namespace API
             }
             catch (Exception e)
             {
-                _logger.LogError(e.Message);
+                Logger.LogError(e.Message);
                 return BadRequest(e.Message);
             }
         }
@@ -64,15 +55,15 @@ namespace API
         [HttpPost]
         public async Task<ActionResult<Unit>> Create([FromBody] CreateActivity.Command command)
         {
-            return await _mediator.Send(command);
-            //_logger.LogInformation("Hereee");
+            return await Mediator.Send(command);
+            //Logger.LogInformation("Hereee");
             //try
             //{
-            //    return await _mediator.Send(command);
+            //    return await Mediator.Send(command);
             //}
             //catch (Exception e)
             //{
-            //    _logger.LogError(e.Message);
+            //    Logger.LogError(e.Message);
             //    return BadRequest(e.Message);
             //}
         }
@@ -82,7 +73,7 @@ namespace API
         //{
         //    try
         //    {
-        //        return await _mediator.Send(new CreateActivity.Command {
+        //        return await Mediator.Send(new CreateActivity.Command {
         //            Id = activity.Id,
         //            Category = activity.Category,
         //            City = activity.City,
@@ -94,7 +85,7 @@ namespace API
         //    }
         //    catch (Exception e)
         //    {
-        //        _logger.LogError(e.Message);
+        //        Logger.LogError(e.Message);
         //        return BadRequest(e.Message);
         //    }
         //}
@@ -102,15 +93,15 @@ namespace API
         [HttpPut("{id}")]
         public async Task<ActionResult<Unit>> Edit(Guid id, [FromBody] EditActivity.Command command)
         {
-            return await _mediator.Send(command);
+            return await Mediator.Send(command);
             //try
             //{
             //    command.Id = id;
-            //    return await _mediator.Send(command);
+            //    return await Mediator.Send(command);
             //}
             //catch (Exception e)
             //{
-            //    _logger.LogError(e.Message);
+            //    Logger.LogError(e.Message);
             //    return BadRequest(e.Message);
             //}
         }
@@ -118,14 +109,14 @@ namespace API
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(Guid id)
         {
-            return await _mediator.Send(new DeleteActivity.Command { Id = id });
+            return await Mediator.Send(new DeleteActivity.Command { Id = id });
             //try
             //{
-            //    return await _mediator.Send(new DeleteActivity.Command { Id = id });
+            //    return await Mediator.Send(new DeleteActivity.Command { Id = id });
             //}
             //catch (Exception e)
             //{
-            //    _logger.LogError(e.Message);
+            //    Logger.LogError(e.Message);
             //    return BadRequest(e.Message);
             //}
         }

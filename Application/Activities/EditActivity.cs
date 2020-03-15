@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.ActivityReference;
 using FluentValidation;
 using MediatR;
 using Persistence;
@@ -15,7 +14,7 @@ namespace Application.Activities
             public Guid Id { get; set; }
             public string Title { get; set; }
             public string Description { get; set; }
-            public ActivityType? Category { get; set; }
+            public string Category { get; set; }
             public DateTime? Date { get; set; }
             public string City { get; set; }
             public string Venue { get; set; }
@@ -52,12 +51,9 @@ namespace Application.Activities
                 {
                     throw new Exception("Could not found activity");
                 }
-                Console.WriteLine(request.Category);
-                Console.WriteLine(request.Category.ToString());
-                Console.WriteLine((ActivityType)Enum.Parse(typeof(ActivityType), activity.Category.ToString()));
                 activity.Title = request.Title ?? activity.Title;
                 activity.Description = request.Description ?? activity.Description;
-                activity.Category = request.Category.ToString() ?? activity.Category;
+                activity.Category = request.Category ?? activity.Category;
                 activity.Date = request.Date ?? activity.Date;
                 activity.City = request.City ?? activity.City;
                 activity.Venue = request.Venue ?? activity.Venue;

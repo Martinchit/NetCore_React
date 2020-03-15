@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Persistence.Seeds;
+using Microsoft.AspNetCore.Identity;
+using Domain;
 
 namespace API
 {
@@ -25,9 +27,10 @@ namespace API
                 var logger = services.GetRequiredService<ILogger<Program>>();
                 try
                 {
+                    var userManager = services.GetRequiredService<UserManager<AppUser>>();
                     var context = services.GetRequiredService<DataContext>();
                     context.Database.Migrate();
-                    Init.SeedData(context);
+                    Init.SeedData(context, userManager).Wait();
                     logger.LogInformation("Files migrated");
                 }
                 catch(Exception ex) 
